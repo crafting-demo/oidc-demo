@@ -1,0 +1,43 @@
+---
+endpoints:
+  # This is a regular unauthenticated endpoint for OIDC providers
+  # which supports wildcard matching of callback hostnames (e.g. Okta)
+  # or doesn't verify callback hostnames.
+  - name: app
+    http:
+      routes:
+        - path_prefix: /
+          backend:
+            target: app
+            port: http
+      auth_proxy:
+        disabled: true
+  # This is a pass-through endpoint for OIDC providers which verifies
+  # the callback hostname strictly (e.g. Google).
+  - name: google
+    http:
+      routes:
+        - path_prefix: /
+          backend:
+            target: app
+            port: http
+      auth_proxy:
+        mode: PASSTHROUGH
+        passthrough:
+          oauth_callback_path: /auth/google
+workspaces:
+  - name: app
+    ports:
+      - name: http
+        port: 3000
+        protocol: HTTP/TCP
+    checkouts:
+      - path: src/demo
+        repo:
+          git: git@github.com:crafting-demo/oidc-demo
+    packages:
+      - name: nodejs
+        version: ~18
+    env:
+    - OKTA_CONFIG_FILE=/run/sandbox/fs/secrets/shared/okta-oidc-conf
+    - GOOGLE_CONFIG_FILE=/run/sandbox/fs/secrets/shared/google-oidc-conf

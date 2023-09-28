@@ -1,0 +1,8 @@
+hooks:
+  post-checkout:
+    cmd: npm install
+
+daemons:
+  app:
+    run:
+      cmd: npm start
