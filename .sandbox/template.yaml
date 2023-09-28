@@ -34,7 +34,7 @@ workspaces:
     checkouts:
       - path: src/demo
         repo:
-          git: git@github.com:crafting-demo/oidc-demo
+          git: https://github.com/crafting-demo/oidc-demo
     packages:
       - name: nodejs
         version: ~18
